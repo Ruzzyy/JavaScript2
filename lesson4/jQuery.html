@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="author" content="Alexander Shatalov">
+    <title>A JavaScript 2 > Lesson 4 </title>
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <style>
+        .main {
+            margin: 20px auto;
+            width: 30%;
+        }
+        .tabs {
+            background-color: #bfaec7;
+        }
+        ul {
+            padding: 0px;
+            margin: 0px;
+        }
+        li {
+            cursor: pointer;
+            display: inline-block;
+            list-style-type: none;
+            padding: 5px;
+            margin: 0px;
+            background: #c78aa0;
+        }
+        .tab {
+            padding: 5px;
+        }
+        .titles .active {
+            font-weight: bold;
+            background-color: #bfaec7;
+        }
+    </style>
+</head>
+
+<body>
+<div class="main">
+    <ul class="titles">
+        <li class="title active">Вкладка 1</li>
+        <li class="title">Вкладка 2</li>
+        <li class="title">Вкладка 3</li>
+        <li class="title">Вкладка 4</li>
+    </ul>
+    <div class="tabs">
+        <div class="tab active">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur deserunt ut vel. Alias aspernatur facere quis. Animi corporis culpa dicta in molestiae nisi numquam officia, praesentium? Doloribus exercitationem officia quam.        </div>
+        <div class="tab">
+            My 2-year-old niece, Sienna, lives in Asia. While her family was visiting Grandma and Grandpa in Florida, she asked her mother if she could play with Play-doh. Her mother said the Play-doh was back at their house. Sienna looked puzzled and replied, “But where did the house go?”
+        </div>
+        <div class="tab">
+            <p>The thirty-three thieves thought that they thrilled the throne throughout Thursday.</p>
+            <p>You know New York, you need New York, you know you need unique New York.</p>
+            <p>I wish to wish the wish you wish to wish, but if you wish the wish the witch wishes, I won’t wish the wish you wish to wish.</p>
+        </div>
+        <div class="tab">
+            On Easter one year, I got to see my 5-year-old granddaughter, Julia. I wore my best suit for  the holiday.
+
+            Julia said, “Grandpa, you look so handsome today. Did you take a shower?”
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        let $tabs = $('.tabs .tab');
+        let ACTIVE = 'active';
+        let ACTIVE_DOT = '.' + ACTIVE;
+        $tabs.not(ACTIVE_DOT).hide();
+        // Обработка при клике по <ul>
+        $('ul.titles').on('click', 'li:not(ACTIVE_DOT)', function() {
+            // Заголовки
+            $(this).addClass(ACTIVE).siblings().removeClass(ACTIVE);
+            // Тексты
+            $tabs.hide().eq($(this).index()).show().addClass(ACTIVE).siblings().removeClass(ACTIVE);
+        });
+    });
+</script>
+</body>
+
+</html>
