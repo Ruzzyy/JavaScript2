@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div>Время готовности вашего кофе: <span id='waitingTime'>0</span> </div>
+<div id='ready'></div>
+<div id='offMachine'></div>
+
+<button id='turnOff' onclick='vitek.turnOff()'>Turn Off</button>
+<button id='turnOn' onclick='vitek.launch()'>turn On</button>
+
+<script>
+    /* ДЗ
+    доработать кофеварку
+    ввести значение зерен
+    проверка на пустую кофеварку
+    реализовать кнопку стоп
+    * время приготовления зависит от кол-ва зерен
+    */
+    function CoffeeMachine(power) {
+        // удельная теплоемкость воды
+        const waterHeatCapacity = 4200
+        // температура воды до которой греем
+        const maxTemp = 90
+        // колличество воды в кофеварке
+        let waterAmount = 0
+        let coffeeAmount = 0;
+
+        this.coffee = function (newCofAmount) {
+            if (newCofAmount >= 5) {
+                coffeeAmount = newCofAmount;
+            }else {
+                console.error('Недостаточно кофе!')
+            }
+        };
+
+        this.fill = function (newAmount) {
+            if(newAmount >= 10) {
+                waterAmount = newAmount
+            } else {
+                console.error('Слишком мало воды!')
+            }
+        }
+
+        const getBoilTime = function () {
+            return (waterAmount * coffeeAmount * waterHeatCapacity * maxTemp) / power
+        }
+
+        this.launch = function () {
+            const time = getBoilTime()
+            let waitingTime = document.querySelector('#waitingTime').innerText =  time;
+            let timer = setTimeout(function () {
+                let ready = document.querySelector('#ready').innerText = 'Ваш кофе готов!'
+            }, time)
+            this.turnOff = function () {
+                let off= document.querySelector('#offMachine').innerText = 'Кофеварка отключена! '
+                clearTimeout(timer)
+            }
+        }
+
+    }
+
+    var vitek = new CoffeeMachine(3000)
+    vitek.fill(10)
+    vitek.coffee(5)
+</script>
+</body>
+</html>
