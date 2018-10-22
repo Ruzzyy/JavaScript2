@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>regexp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="container">
+    <form action="">
+        <p>Lorem ipsum dolor sit aren't, consectetur 'adipisicing elit'. Accusantium aren't dolor eaque exercitationem, 'explicabo impedit' laborum officiis perferendis perspiciatis reprehenderit sunt tempora temporibus 'tenetur'. Atque, explicabo laborum. 'Cupiditate' doloremque eum odit?</p>
+
+        <div class="form-group">
+            <label for="name">Имя</label>
+            <input type="text" class="form-control" id="name"  data-validate='name' placeholder="Введите имя">
+        </div>
+        <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="text" class="form-control" id="phone" data-validate='phone' placeholder="+7(000)000-0000  ">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" data-validate='email' placeholder="ololo@gmail.com">
+        </div>
+        <div class="form-group">
+            <label for="text">Сообщение</label>
+            <textarea class="form-control" id="text" rows="3" data-validate='text'></textarea>
+        </div>
+        <div id="form-group"></div>
+        <label for="town"> Город проживания</label>
+        <select class="form-control" id="town" data-validate='town'>
+            <option value="" disabled>Город проживания...</option>
+        </select> <br>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+
+</div>
+<script>
+    // 1 - Придумать шаблон, который меняет одинарные кавычки на двойные.
+    const pTag = document.querySelector('p');
+    const tagValue = pTag.innerText;
+    console.log(tagValue);
+    // tagValue - это строка.Используем метод replace(regExp,на что меняем), и меняем одинарные кавычки на двойные.
+    // const newValue = tagValue.replace(/'/gmi, `"`);
+    // pTag.innerHTML = newValue;
+
+    // 2 - Улучшить шаблон таким образом, чтобы конструкции типа aren’t не меняли одинарную кавычку на двойную.
+    //шаблон - /'(?!\w\b)/  - если после ' стоит символ, то мы не выделяем элемент
+    const newValue = tagValue.replace(/'(?!\w\b)/gmi, `"`);
+    pTag.innerHTML = newValue;
+
+    // 3. Создать форму обратной связи с полями: Имя, Телефон, e-mail, текст, кнопка «Отправить».
+    const validate = (value, regExp) => {
+        console.log(value);
+        return value.replace(regExp, '').length === 0;
+    };
+    const validateInput = (input) => {
+        const validateType = input.getAttribute('data-validate');
+        let isValid = false;
+        switch(validateType){
+            case 'name':
+                isValid = validate(input.value, /[a-zа-яё]/gmi);
+            break;
+            case 'phone':
+                isValid = validate(input.value, /\+7\(\d{3}\)\d{3}-\d{4}/gmi);
+                break;
+            case 'email':
+                isValid = validate(input.value, /[\w._-]+@mail\.ru/gmi);
+                break;
+            case 'text':
+                isValid = validate(input.value, /./gmi);
+                break;
+            default:
+                isValid = true;
+        }
+        if(isValid){
+            input.classList.add('is-valid');
+            input.classList.remove('is-invalid');
+        } else{
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+    } ;
+
+    window.onload = () => {
+        const inputs = [...document.querySelectorAll('.form-control')]; // массив, для перебора методом forEach()
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                validateInput(input)
+            });
+        });
+    }
+
+
+
+    </script>
+</body>
+</html>
