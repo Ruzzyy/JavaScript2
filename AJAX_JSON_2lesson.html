@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+
+    <form class="user-form">
+        <div class="form-group">
+            <label for="inputName">Имя </label>
+            <input type="text" class="form-control" id="inputName" placeholder="Введите имя">
+        </div>
+        <div class="form-group">
+            <label for="InputEmail">Email: </label>
+            <input type="email" class="form-control" id="InputEmail" placeholder="Введите email">
+        </div>
+        <div class="form-group">
+            <label for="inputAge">Возраст </label>
+            <input type="number" class="form-control" id="inputAge" placeholder="Введите Ваш возраст">
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+
+    <ul class="list-group list-group-flush user-list"> </ul>
+
+    <form class="get-user-form" >
+        <div class="form-group">
+            <label for="userId">Имя </label>
+            <input type="text" class="form-control" id="userId" placeholder="Введите ID пользователя">
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+
+</div>
+<script>
+const baseURL = 'http://89.108.65.123';
+const inputs = [...document.querySelectorAll('.user-form input')];
+const userIdInput = document.querySelector('.get-user-form input');
+const userList = document.querySelector('.user-list');
+
+//1- добавляем обработчик на form, чтобы информация собиралась после нажатия на кнопку "отправить"
+const getUserForm = document.querySelector('.get-user-form');
+const userForm = document.querySelector('.user-form');
+userForm.addEventListener('submit', (event) => {   //при попытке отправить форму, перехватываем события
+    event.preventDefault();
+    const [name, email, age] = inputs.map(input => input.value); //.map() перебирает массив и возвращает новый массив
+    const userObj = {name, email, age,};
+    //1.1- и отправлялась на сервер в формате JSON
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${baseURL}/user`, true);
+    xhr.send(JSON.stringify(userObj));
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(`Пользователь ${name} создан.`)
+        }
+    }
+});
+
+getUserForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    getUser();
+});
+
+//получаем пользователя по id
+const getUser = () => {
+    const userId = userIdInput.value;
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `${baseURL}/user/${userId}`, true);
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            //нужно распарсить xhr.responseText когда он придет в ответе
+            const user = JSON.parse(xhr.responseText);
+            alert(`Пользователь ${user.name} (${user.age}) - ${user.email}`)
+        }
+    }
+};
+
+//ф-ция получения списка пользователей
+const getUsers = () => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `${baseURL}/user`, true);
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState === 4 && xhr.status === 200){
+            const users = JSON.parse(xhr.responseText);
+            userList.innerHTML = '';
+            users.forEach((user) => {
+                userList.innerHTML += `<li class="list-group-item"> ${user.name}(${user.age}) - ${user.email}</li>`;
+            })
+        }
+    }
+};
+getUsers();
+
+</script>
+</body>
+</html>
